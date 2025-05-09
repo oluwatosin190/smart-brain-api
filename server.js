@@ -20,9 +20,12 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-app.get( '/', (req, res)=> {
-  res.send(database.users);
-})
+app.get('/', (req, res) => {
+  db.select('*').from('users')
+    .then(users => res.json(users))
+    .catch(err => res.status(400).json('unable to fetch users'));
+});
+
 app.post('/signin', (req, res) =>{
   db.select('email', 'hash').from('login')
   .where('email', '=', req.body.email)
